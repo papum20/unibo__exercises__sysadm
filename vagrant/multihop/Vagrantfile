@@ -1,0 +1,43 @@
+Vagrant.configure("2") do |config| 
+   config.vm.box = "debian/bookworm64"
+
+   config.vm.provider "virtualbox" do |vb|
+      vb.linked_clone = true
+   end     
+   config.vm.define "c" do |machine|
+      machine.vm.hostname = "c"
+      machine.vm.network "private_network", virtualbox__intnet: "LAN1", auto_config: false
+      machine.vm.provision "ansible" do |ansible|
+        ansible.playbook = "c.yml"
+      end
+   end
+
+   config.vm.define "r1" do |machine|
+      machine.vm.hostname = "r1"
+      machine.vm.network "private_network", virtualbox__intnet: "LAN1", auto_config: false
+      machine.vm.network "private_network", virtualbox__intnet: "LAN2", auto_config: false
+      machine.vm.provision "ansible" do |ansible|
+        ansible.playbook = "r1.yml"
+      end
+   end
+
+   config.vm.define "r2" do |machine|
+      machine.vm.hostname = "r2"
+      machine.vm.network "private_network", virtualbox__intnet: "LAN2", auto_config: false
+      config.vm.network "private_network", virtualbox__intnet: "LAN3", auto_config: false
+      machine.vm.provision "ansible" do |ansible|
+        ansible.playbook = "r2.yml"
+      end 
+   end
+
+
+   config.vm.define "s" do |machine|
+      machine.vm.hostname = "s"
+      config.vm.network "private_network", virtualbox__intnet: "LAN3", auto_config: false
+      machine.vm.provision "ansible" do |ansible|
+        ansible.playbook = "s.yml"
+      end  
+   end
+
+
+end

@@ -1,0 +1,48 @@
+---
+- hosts: client
+  become: true
+  tasks:
+  - name: configure host network
+    ansible.builtin.copy:
+      src: "client.eth2"
+      dest: "/etc/network/interfaces.d/eth2"
+      mode: '0644'
+    notify: Restart networking
+
+  handlers:
+    - name: Restart networking
+      ansible.builtin.service:
+        name: networking
+        state: restarted
+
+- hosts: router
+  become: true
+  tasks:
+    - name: configure host network
+      ansible.builtin.copy:
+        src: "router.eth3"
+        dest: "/etc/network/interfaces.d/eth3"
+        mode: '0644'
+      notify: Restart networking
+
+  handlers:
+    - name: Restart networking
+      ansible.builtin.service:
+        name: networking
+        state: restarted
+
+- hosts: server
+  become: true
+  tasks:
+    - name: configure host network
+      ansible.builtin.copy:
+        src: "server.eth2"
+        dest: "/etc/network/interfaces.d/eth2"
+        mode: '0644'
+      notify: Restart networking
+
+  handlers:
+    - name: Restart networking
+      ansible.builtin.service:
+        name: networking
+        state: restarted

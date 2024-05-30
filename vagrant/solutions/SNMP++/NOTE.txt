@@ -1,0 +1,1 @@
+L'esercizio prevede anche lo scambio delle chiavi SSH ovvero: la generazione di una coppia di chiavi nel controller oppure nel host da dove si lancia Ansible. Sucessivamente la chiave pubblica generata deve essere installata nei due agent; questa parte viene lasciata da completare.

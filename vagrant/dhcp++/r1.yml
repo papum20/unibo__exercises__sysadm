@@ -1,0 +1,68 @@
+- hosts: all
+  become: true
+  tasks:
+  - name: Copy a new eth1 configuration "interfaces" file into place, after passing validation with ifup
+    ansible.builtin.copy:
+      src: r1eth1
+      dest: /etc/network/interfaces.d/eth1
+      validate: /usr/sbin/ifup --no-act -i %s eth1
+    notify: Restart Networking
+
+  - name: Copy a new eth2 configuration "interfaces" file into place, after passing validation with ifup
+    ansible.builtin.copy:
+      src: r1eth2
+      dest: /etc/network/interfaces.d/eth2
+      validate: /usr/sbin/ifup --no-act -i %s eth2
+    notify: Restart Networking
+
+  - name: Change allow-hotplug with auto
+    ansible.builtin.replace:
+      path: '/etc/network/interfaces'
+      regexp: '^allow\-hotplug'
+      replace: 'auto'
+      validate: /usr/sbin/ifup --no-act -i %s eth0
+
+  - name: Ensure forwarding is enabled 
+    ansible.posix.sysctl:
+      name: net.ipv4.ip_forward
+      value: '1'
+      sysctl_set: true
+      state: present
+      reload: true
+
+  - name: Install dnsmasq
+    ansible.builtin.apt:
+      name: dnsmasq
+      state: present
+      update_cache: yes
+
+  - name: Config dnsmasq
+    ansible.builtin.copy:
+      src: dnsmasq.conf
+      dest: /etc/dnsmasq.conf
+      owner: 'root'
+      group: 'root'
+      mode: '0644'
+    notify: Restart dnsmasq
+
+  - name: Add static entry for client to /etc/hosts
+    ansible.builtin.lineinfile:
+      path: '/etc/hosts'
+      line: '10.1.1.1 client'
+
+  - name: Add static entry for server to /etc/hosts
+    ansible.builtin.lineinfile:
+      path: '/etc/hosts'
+      line: '10.2.2.2 server'
+
+
+  handlers:
+    - name: Restart Networking
+      ansible.builtin.service:
+        name: networking
+        state: restarted
+    - name: Restart dnsmasq
+      ansible.builtin.service:
+        name: dnsmasq
+        state: restarted
+

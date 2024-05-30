@@ -1,0 +1,20 @@
+---
+- name: Update all packages
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Change allow-hotplug with auto
+  ansible.builtin.replace:
+    path: '/etc/network/interfaces'
+    regexp: '^allow\-hotplug'
+    replace: 'auto'
+    validate: /usr/sbin/ifup --no-act -i %s eth0
+
+- name: Copy rsyslog configuration enable remote log
+  ansible.builtin.copy:
+    src: rsyslog.conf
+    dest: '/etc/rsyslog.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: Restart rsyslog

@@ -1,0 +1,2 @@
+Debian-snmp ALL=(ALL) NOPASSWD: /usr/bin/tcpdump -n -U -i eth1 -c 10000 -w /tmp/dump_*
+Debian-snmp ALL=(ALL) NOPASSWD: /usr/bin/chown Debian-snmp /tmp/dump_*

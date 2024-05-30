@@ -1,0 +1,62 @@
+---
+- hosts: all
+  become: true
+  tasks:
+
+- hosts: client
+  become: true
+  tasks:
+
+  - name: Copy a new network configuration "interfaces" file into place, after passing validation with ifup 
+    ansible.builtin.copy:
+      src: '{{ item.value }}'
+      dest: /etc/network/interfaces
+      validate: /usr/sbin/ifup --no-act -i %s '{{ item.eth }}'
+    notify: Restart Networking
+    loop:
+      - { value: 'client_eth2', eth: 'eth2' }
+  
+  handlers:
+  - name: Restart Networking
+    ansible.builtin.service:
+      name: networking
+      state: restarted
+
+- hosts: router
+  become: true
+  tasks:
+
+  - name: Copy a new network configuration "interfaces" file into place, after passing validation with ifup 
+    ansible.builtin.copy:
+      src: '{{ item.value }}'
+      dest: /etc/network/interfaces
+      validate: /usr/sbin/ifup --no-act -i %s '{{ item.eth }}'
+    notify: Restart Networking
+    loop:
+      - { value: 'router_eth3', eth: 'eth3' }
+  
+  handlers:
+  - name: Restart Networking
+    ansible.builtin.service:
+      name: networking
+      state: restarted
+
+- hosts: server 
+  become: true
+  tasks:
+
+  - name: Copy a new network configuration "interfaces" file into place, after passing validation with ifup 
+    ansible.builtin.copy:
+      src: '{{ item.value }}'
+      dest: /etc/network/interfaces
+      validate: /usr/sbin/ifup --no-act -i %s '{{ item.eth }}'
+    notify: Restart Networking
+    loop:
+      - { value: 'server_eth2', eth: 'eth2' }
+  
+  handlers:
+  - name: Restart Networking
+    ansible.builtin.service:
+      name: networking
+      state: restarted
+
