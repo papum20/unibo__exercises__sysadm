@@ -1,0 +1,66 @@
+---
+- name: Install snmpd
+  ansible.builtin.apt:
+    name: snmpd
+    state: present
+    update_cache: yes
+
+- name: edit snmpd.conf
+  ansible.builtin.replace:
+    path: /etc/snmp/snmpd.conf
+    regexp: 'agentAddress udp:127.0.0.1:161'
+    replace: 'agentAddress udp:161'
+
+
+- name: remove communities
+  ansible.builtin.lineinfile:
+    regexp: "{{ item }}"
+    path: /etc/snmp/snmpd.conf
+    state: absent
+  loop:
+    - '^.*rocommunity.*$'
+    - '^.*rwcommunity.*$'
+
+- name: lines present in snmpd.conf
+  ansible.builtin.lineinfile:
+    line: "{{ item }}"
+    path: /etc/snmp/snmpd.conf
+    state: present
+  loop:
+    - view all included .1
+    - rocommunity public default -V all
+    - rwcommunity supercom default -V all
+    - 'agentAddress udp:161'
+    - 'extend-sh createdump    /usr/bin/createdump.sh' 
+    - 'extend-sh deletedump    /usr/bin/deletedump.sh' 
+  notify: Restart snmpd
+
+
+- name: Install tcpdump
+  ansible.builtin.apt:
+    name: tcpdump
+    state: present
+    update_cache: yes
+
+
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: '/usr/bin/'
+    owner: 'root'
+    group: 'root'
+    mode: '0740'
+  loop:
+    - createdump.sh
+    - deletedump.sh
+
+- name: Add privileged actions for snmp agent scripts
+  ansible.builtin.copy:
+    src: Debian-snmp
+    dest: '/etc/sudoers.d/'
+    owner: 'root'
+    group: 'root'
+    mode: '0440'
+    validate: '/usr/sbin/visudo -csf %s'
+
+  

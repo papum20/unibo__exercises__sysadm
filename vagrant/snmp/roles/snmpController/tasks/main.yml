@@ -1,0 +1,30 @@
+---
+- name: Enable mibs
+  ansible.builtin.replace:
+    path: /etc/apt/sources.list
+    regexp: 'main$'
+    replace: 'main contrib non-free-firmware'
+
+- name: Install snmp
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - snmp
+    #- snmp-mibs-downloader
+
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: managedump.sh
+    dest: '/usr/bin/'
+    owner: 'root'
+    group: 'root'
+    mode: '0740'
+
+- name: Run managedump.sh every 3 min
+  ansible.builtin.cron:
+    name: "managedump"
+    minute: "3"
+    job: "/usr/bin/managedump.sh"
+

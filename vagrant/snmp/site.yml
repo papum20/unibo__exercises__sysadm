@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: true
+  roles:
+   - role: common
+
+- hosts: agent*
+  become: true
+  roles:
+   - role: snmpAgent
+   - role: client
+
+- hosts: controller
+  become: true
+  roles:
+   - role: router
+   - role: snmpController
