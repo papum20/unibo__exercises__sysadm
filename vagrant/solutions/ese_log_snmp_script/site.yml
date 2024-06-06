@@ -1,0 +1,17 @@
+---
+- hosts: manager
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - snmpclient
+   - sshclient
+   - monitor
+
+- hosts: server*
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - snmpd
+   - sshserver

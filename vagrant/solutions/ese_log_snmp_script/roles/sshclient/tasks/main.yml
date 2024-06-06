@@ -1,0 +1,16 @@
+---
+- name: install secure shell privkey
+  ansible.builtin.copy:
+    src: snmp
+    dest: /home/vagrant/.ssh/snmp
+    owner: vagrant
+    group: vagrant
+    mode: '0400'
+
+- name: install secure shell pubkey
+  ansible.builtin.copy:
+    src: snmp.pub
+    dest: /home/vagrant/.ssh/snmp.pub
+    owner: vagrant
+    group: vagrant
+    mode: '0444'

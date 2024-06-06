@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: true
+  roles:
+   - role: common
+
+- hosts: client
+  become: true
+  roles:
+   - role: client
+   - role: sshclient
+
+- hosts: router
+  become: true
+  roles:
+   - role: router
+   - role: tcpdump
+
+- hosts: server
+  become: true
+  roles:
+   - role: server
+   - role: sshserver

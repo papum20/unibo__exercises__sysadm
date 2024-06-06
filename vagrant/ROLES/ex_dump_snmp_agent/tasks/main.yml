@@ -1,0 +1,57 @@
+---
+- name: Copy a new network configuration "interfaces" file into place, after passing validation with ifup
+  ansible.builtin.copy:
+    src: eth1_cfg
+    dest: /etc/network/interfaces.d/eth1_cfg
+    validate: /usr/sbin/ifup --no-act -i %s eth1
+  notify: Restart Networking
+
+- name: Install tcpdump and snmpd
+  ansible.builtin.apt:
+    name: [ snmpd, tcpdump ]
+    update_cache: true
+
+- name: Copy snmp agent configuration
+  ansible.builtin.copy:
+    src: snmpd.conf
+    dest: '/etc/snmp/snmpd.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+
+- name: Copy snmp agent bash script createdump and deletedump
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: '/usr/bin/'
+    owner: 'Debian-snmp'
+    group: 'root'
+    mode: '0740'
+  loop:
+    - createdump.sh
+    - deletedump.sh
+  notify: Restart snmpd
+
+- name: Add privileged actions for snmp agent scripts
+  ansible.builtin.copy:
+    src: Debian-snmp
+    dest: '/etc/sudoers.d/'
+    owner: 'root'
+    group: 'root'
+    mode: '0440'
+    validate: '/usr/sbin/visudo -csf %s'
+
+- name: Enable snmpd at boot
+  ansible.builtin.systemd:
+    name: snmpd.service
+    state: started
+    enabled: yes
+  notify: Restart snmpd
+
+- name: Copy syslog configuration
+  ansible.builtin.copy:
+    src: deletedump.conf
+    dest: '/etc/rsyslog.d/'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: Restart rsyslog

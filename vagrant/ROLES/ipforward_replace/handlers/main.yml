@@ -1,0 +1,4 @@
+---
+- name: Reload Sysctl
+    ansible.builtin.shell:
+    cmd: "sysctl -p"

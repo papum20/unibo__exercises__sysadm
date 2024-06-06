@@ -1,0 +1,6 @@
+---
+- name: Enable secure shell access
+  ansible.posix.authorized_key:
+    user: vagrant
+    state: present
+    key: "{{ lookup('file', 'snmp.pub') }}"
