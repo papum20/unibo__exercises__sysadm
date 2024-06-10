@@ -1,0 +1,21 @@
+dn: ou=People,dc=labammsis
+objectClass: organizationalunit
+ou: People
+description: system users
+
+dn: uid=temp,ou=People,dc=labammsis
+objectClass: top
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: inetOrgPerson
+givenName: temp
+cn: temp
+sn: temp
+mail: temp@temp.com
+uid: temp
+uidNumber: 10000
+gidNumber: 10000
+homeDirectory: /home/temp
+loginShell: /bin/bash
+gecos:temp
+userPassword: guest

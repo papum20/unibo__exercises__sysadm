@@ -1,0 +1,16 @@
+---
+- hosts: server-*
+  become: true
+  roles:
+   - common
+   - eth1dhcp
+   - snmpd
+
+- hosts: manager
+  become: true
+  roles:
+   - common
+   - netr1
+   - dnsmasqr1
+   - snmpclient
+   - scripts

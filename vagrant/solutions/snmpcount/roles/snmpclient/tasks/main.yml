@@ -1,0 +1,26 @@
+---
+- name: Ensure non-free and contrib are enabled
+  ansible.builtin.apt_repository:
+    repo: deb https://deb.debian.org/debian bookworm main contrib non-free
+    state: present
+
+- name: Install CLI tools
+  ansible.builtin.apt:
+    name: snmp
+    state: present
+
+- name: Install MIBS
+  ansible.builtin.apt:
+    name: snmp-mibs-downloader
+    state: present
+
+- name: Install ipcalc
+  ansible.builtin.apt:
+    name: ipcalc
+    state: present
+
+- name: Configure MIBS
+  ansible.builtin.lineinfile:
+    path: /etc/snmp/snmp.conf
+    regexp: '^mibs'
+    state: absent

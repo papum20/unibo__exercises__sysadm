@@ -1,0 +1,16 @@
+---
+- name: install secure shell privkey
+  ansible.builtin.copy:
+    src: key
+    dest: /home/vagrant/.ssh/key
+    owner: vagrant
+    group: vagrant
+    mode: '0400'
+
+- name: install secure shell pubkey
+  ansible.builtin.copy:
+    src: key.pub
+    dest: /home/vagrant/.ssh/key.pub
+    owner: vagrant
+    group: vagrant
+    mode: '0444'

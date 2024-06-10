@@ -1,0 +1,18 @@
+---
+- hosts: server-*
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - eth1dhcp
+   - snmpd
+
+- hosts: manager
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - netr1
+   - dnsmasqr1
+   - snmpclient
+   - scripts

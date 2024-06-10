@@ -1,0 +1,31 @@
+---
+- name: Ensure non-free and contrib are enabled
+  ansible.builtin.apt_repository:
+    repo: deb https://deb.debian.org/debian bookworm main contrib non-free
+    state: present
+
+- name: Install SNMP and Mibs
+  ansible.builtin.apt:
+    name: [ snmp, snmp-mibs-downloader ]
+    update_cache: true
+
+- name: Configure MIBS
+  ansible.builtin.lineinfile:
+    path: /etc/snmp/snmp.conf
+    regexp: '^mibs'
+    state: absent
+
+- name: copy monitor
+  ansible.builtin.copy:
+    src: monitor.sh
+    dest: /usr/bin/monitor.sh
+    mode: 0755
+    owner: root
+    group: root
+
+- name: cron
+  ansible.builtin.cron: 
+    name : monitor.sh
+    hour: "8-18/1"
+    weekday: "1-5"
+    job: "/usr/bin/monitor.sh"  

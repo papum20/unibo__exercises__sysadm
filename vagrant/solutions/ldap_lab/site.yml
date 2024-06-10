@@ -1,0 +1,14 @@
+---
+- hosts: client
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - ldap_login
+
+- hosts: server
+  become: true
+  roles:
+   - set_proxy
+   - common
+   - ldap_server

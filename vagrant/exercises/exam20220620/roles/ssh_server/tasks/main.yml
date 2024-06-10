@@ -1,0 +1,21 @@
+---
+
+- name: create user temp
+  ansible.builtin.user:
+    name: temp
+
+
+- name: Enable secure shell access
+  ansible.posix.authorized_key:
+    user: temp
+    state: present
+    key: "{{ lookup('file', 'key.pub') }}"
+
+- name: Copy ask.sh
+  ansible.builtin.copy:
+    src: ask.sh
+    dest: /home/temp/ask.sh
+    group: temp
+    mode: 0700
+    owner: temp
+
