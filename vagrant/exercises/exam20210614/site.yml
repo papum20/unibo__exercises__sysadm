@@ -1,0 +1,47 @@
+---
+- hosts: Router*
+  become: true
+  roles:
+   #- set_proxy
+   - common
+   - netr1
+   - ipforward
+   - dnsmasqr1
+   - rsyslog
+   - ssh_server
+   - snmp_agent
+   - router_scripts
+
+- hosts: Client*
+  become: true
+  roles:
+   #- set_proxy
+   - common
+   - eth1dhcp
+   - ldap_login
+
+- hosts: Server*
+  become: true
+  roles:
+   #- set_proxy
+   - common
+   - eth1dhcp
+   #- netserver
+   - ldap_login
+   - ldap_server
+   - ldap_scripts
+   - ssh_client
+   - snmp_controller
+
+- hosts: Server1
+  become: true
+  roles:
+   #- set_proxy
+   - server_cron1
+
+- hosts: Server2
+  become: true
+  roles:
+   #- set_proxy
+   - server_cron2
+

@@ -13,4 +13,11 @@ function TASK {
 	fi
 }
 
-snmpget -v 1 -c public 10.2.2.1 .1.3.6.1.4.1.2021.10.1.1
+MIN=0
+MAX=255
+
+for IP4 in $(seq $MIN $MAX) ; do
+	IP=10.100.2.$IP4
+	echo $IP 
+	TASK $IP &
+done

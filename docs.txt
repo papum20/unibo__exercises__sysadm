@@ -1,0 +1,15 @@
+https://developer.hashicorp.com/vagrant/docs
+https://docs.ansible.com/ansible/latest/
+
+OID browser: 
+
+http://www.oid-info.com/index.htm
+http://www.alvestrand.no/objectid/index.html
+
+SNMP:
+https://virtuale.unibo.it/pluginfile.php/1973717/mod_book/intro/NET-SNMP-EXTEND-MIB.pdf
+https://virtuale.unibo.it/pluginfile.php/1973717/mod_book/intro/Net-SNMP.pdf
+
+LDAP:
+https://oav.net/mirrors/LDAP-ObjectClasses.html
+

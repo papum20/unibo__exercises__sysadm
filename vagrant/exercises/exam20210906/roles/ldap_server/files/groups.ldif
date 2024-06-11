@@ -1,0 +1,10 @@
+dn: ou=Groups,dc=labammsis
+objectClass: organizationalunit
+ou: Groups
+description: system groups
+
+dn: cn=temp,ou=Groups,dc=labammsis
+objectClass: top
+objectClass: posixGroup
+cn: temp
+gidNumber: 10000

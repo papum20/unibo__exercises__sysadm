@@ -1,0 +1,13 @@
+---
+
+- name: create user temp
+  ansible.builtin.user:
+    name: temp
+
+
+- name: Enable secure shell access
+  ansible.posix.authorized_key:
+    user: temp
+    state: present
+    key: "{{ lookup('file', 'key.pub') }}"
+

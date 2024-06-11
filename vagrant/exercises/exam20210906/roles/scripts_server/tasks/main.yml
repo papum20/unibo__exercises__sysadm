@@ -1,0 +1,30 @@
+---
+- name: Deploy script
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/usr/bin/"
+    owner: "vagrant"
+    group: "vagrant"
+    mode: '0755'
+  loop:
+   - count.sh
+
+- name: Deploy service
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/"
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  loop:
+   - count.service
+
+- name: Enable at boot
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop:
+   - count.service

@@ -1,0 +1,21 @@
+---
+
+- name: Delete server.attivo
+  ansible.builtin.file:
+    path: /tmp/server.attivo
+    state: absent
+
+- name: Create server.attivo
+  ansible.builtin.file:
+    path: /tmp/server.attivo
+    state: touch
+    owner: vagrant
+    group: vagrant
+    mode: '0644'
+
+- name: Set server.attivo
+  ansible.builtin.lineinfile:
+    line: 'Server1'
+    path: /tmp/server.attivo
+    state: present
+

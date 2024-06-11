@@ -1,0 +1,17 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /root/
+    owner: root
+    group: root
+    mode: "755"
+  loop:
+    - poll.sh
+
+- name: run poll
+  ansible.builtin.cron:
+    name : poll
+    minute: "*/3"
+    user: root
+    job: "/root/poll.sh >/dev/null"

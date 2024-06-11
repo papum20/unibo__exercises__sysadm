@@ -1,0 +1,7 @@
+---
+- name: run failback
+  ansible.builtin.cron:
+    name : 
+    minute: "1-59/2"
+    user: vagrant
+    job: "/usr/bin/failback.sh >/dev/null"

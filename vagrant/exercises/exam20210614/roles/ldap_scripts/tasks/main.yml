@@ -1,0 +1,20 @@
+---
+- name: Copy scripts
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /bin/
+    mode: "755"
+  loop:
+    - ldap.sh
+    - failback.sh
+
+- name: delete server.attivo
+  ansible.builtin.file:
+    path: /tmp/server.attivo
+    state: absent
+
+- name: Copy eth2 in tmp
+  ansible.builtin.copy:
+    src: eth2server
+    dest: /tmp/eth2
+
