@@ -1,0 +1,1 @@
+insert-users.sh deve essere eseguito con sudo, dovendo cambiare configurazioni di snmpd.
